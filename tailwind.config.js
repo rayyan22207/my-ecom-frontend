@@ -8,21 +8,21 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        bat: {
-          black: '#0f0f0f',
-          dark: '#1a1a1a',
-          grey: '#2d2d2d',
-          lightgrey: '#9e9e9e',
-          pink: '#ff2e88',
-          red: '#ff1744',
-        },
-      },
-      boxShadow: {
-        smooth: '0 10px 30px rgba(0,0,0,0.4)',
-        neon: '0 0 15px rgba(255, 46, 136, 0.6)',
-      },
+  colors: {
+    bat: {
+      black: '#0b0b0d',
+      dark:  '#111113',
+      grey:  '#1c1d20',
+      lightgrey: '#a7a7ac',
+      red:   '#ff2e50',
+      pink:  '#ff2e88',
+      // new:
+      burgundy: '#6e1822',
+      burgundy2: '#8b2431',
     },
+  },
+}
+,
   },
   plugins: [require('flowbite/plugin')],
 }
