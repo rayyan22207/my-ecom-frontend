@@ -9,14 +9,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        gotham: {
-          50: '#f7f7f7', 100: '#e3e3e3', 200: '#c8c8c8', 300: '#a4a4a4',
-          400: '#7a7a7a', 500: '#4f4f4f', 600: '#363636', 700: '#252525',
-          800: '#191919', 900: '#0f0f0f', 950: '#0a0a0a'
+        bat: {
+          black: '#0f0f0f',
+          dark: '#1a1a1a',
+          grey: '#2d2d2d',
+          lightgrey: '#9e9e9e',
+          pink: '#ff2e88',
+          red: '#ff1744',
         },
-        accent: { 500: '#FFD400' }
       },
-      boxShadow: { smooth: '0 10px 30px rgba(0,0,0,0.25)' }
+      boxShadow: {
+        smooth: '0 10px 30px rgba(0,0,0,0.4)',
+        neon: '0 0 15px rgba(255, 46, 136, 0.6)',
+      },
     },
   },
   plugins: [require('flowbite/plugin')],
