@@ -1,34 +1,40 @@
 <script setup>
-import { onMounted } from "vue";
-import gsap from "gsap";
-
-onMounted(() => {
-  gsap.from(".hero-text", {
-    y: -50,
-    opacity: 0,
-    duration: 1,
-    ease: "power3.out",
-  });
-});
+import Hero from "../components/Hero.vue";
+import heroImg from "../assets/hero-gotham.png"; // ← your generated image
 </script>
 
 <template>
-  <section class="bg-bat-black text-center py-20 shadow-smooth">
-  <h1 class="text-5xl font-bold text-bat-pink">Welcome to Gotham</h1>
-  <p class="mt-4 text-bat-lightgrey">Dark, sleek, and stylish e-commerce experience.</p>
-  <button class="mt-6 px-6 py-3 bg-bat-red text-white rounded-lg shadow-neon hover:bg-bat-pink transition">
-    Shop Now
-  </button>
-</section>
-<SwiperSlide>
-  <div class="relative">
-    <img src="https://picsum.photos/1000/400?1" class="w-full" />
-    <div class="absolute inset-0 bg-bat-black/50 flex items-center justify-center">
-      <h2 class="text-4xl font-bold text-bat-pink">New Arrivals</h2>
+  <div class="space-y-10">
+    <Hero
+      :image="heroImg"
+      title="Welcome to Gotham"
+      subtitle="Minimal. Elegant. Built for the night."
+      :badges="['vibrant style', 'crafted for edge']"
+      primary-text="Shop Now"
+      primary-to="/shop"
+      secondary-text="Collection"
+      secondary-to="/shop?collection=featured"
+      height="h-[65vh]"
+      height-sm="sm:h-[75vh]"
+    />
+
+    <!-- More sections here (features, product grid, banner...) -->
+     <section>
+    <div class="mx-auto max-w-7xl px-6 py-16 text-center">
+      <h2 class="text-3xl font-bold text-bat-lightgrey sm:text-4xl">
+        Discover the Dark Elegance of Gotham
+      </h2>
+      <p class="mt-4 text-bat-grey">
+        Explore our exclusive collection of apparel and accessories inspired by the
+        enigmatic allure of Gotham City. Crafted for those who dare to embrace the night.
+      </p>
+      <RouterLink
+        to="/shop"
+        class="mt-6 inline-block rounded-lg bg-bat-pink px-5 py-3 font-semibold text-white hover:bg-bat-pink/90 transition"
+      >
+        Start Shopping
+      </RouterLink>
     </div>
+     </section>
   </div>
-</SwiperSlide>
-
-
-  
 </template>
