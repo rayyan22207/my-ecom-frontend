@@ -43,8 +43,14 @@ const containerAlign = computed(() =>
            shadow-[0_30px_120px_rgba(0,0,0,0.6)]"
     :class="[height, heightSm]"
   >
-    <!-- Background image -->
-    <div class="absolute inset-0 bg-center bg-cover" :style="bgStyle" aria-hidden="true" />
+    <!-- Background image (top anchored; if crop is needed, it happens at the bottom) -->
+    <img
+      v-if="image"
+      :src="image"
+      alt=""
+      class="absolute inset-0 h-full w-full object-cover object-top"
+      aria-hidden="true"
+    />
 
     <!-- Film-grain -->
     <div class="pointer-events-none absolute inset-0 opacity-[0.12] mix-blend-soft-light"
