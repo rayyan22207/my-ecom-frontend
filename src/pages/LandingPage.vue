@@ -5,7 +5,7 @@ import SectionHeader from '../components/SectionHeader.vue'
 import ShoeCard from '../components/ShoeCard.vue'
 
 // hero image (use your own high-res shoe image)
-import heroImg from '../assets/hero-shoe.png'
+import heroImg from '../assets/shoe.webp'
 
 const arrivals = [
   { id: 1, title: 'Oxford', price: 249, img: 'https://picsum.photos/seed/oxford/960/720', badge: 'New' },
@@ -18,7 +18,7 @@ const arrivals = [
   <div class="space-y-10">
     <ShoeHero :image="heroImg" year="2024" cta-text="Shop Now" cta-to="/shop" />
 
-    <TaglineBlock />
+    <!-- <TaglineBlock />
 
     <section class="max-w-7xl mx-auto px-6 space-y-5">
       <SectionHeader title="New Arrivals" link-text="Discover All" link-to="/shop" />
@@ -27,7 +27,7 @@ const arrivals = [
       </div>
     </section>
 
-    <section></section>
+    <section></section> -->
 
     <!-- Wear Quality / Step in Style blocks can be added later as separate components -->
   </div>
