@@ -81,9 +81,12 @@ const fmt = (n, c) => new Intl.NumberFormat('en-GB', { style:'currency', currenc
       </h4>
 
       <div class="flex items-center justify-between">
-        <span class="text-sm font-semibold" :style="{ color: COLORS.textDim }">
-          {{ fmt(product.price, currency) }}
-        </span>
+        <span
+  class="price text-sm font-semibold transition-colors duration-300
+         text-[#b8b3a6] group-hover:text-black group-focus-within:text-black"
+>
+  {{ fmt(product.price, currency) }}
+</span>
 
         <!-- Optional quick view icon reserved space (keeps alignment future-proof) -->
         <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs"
