@@ -5,6 +5,8 @@ import Shop from '../pages/Shop.vue'
 import About from '../pages/About.vue'
 import FAQ from '../pages/FAQ.vue'
 import Contact from '../pages/Contact.vue'
+import Cart from '../pages/Cart.vue'
+import Checkout from '../pages/Checkout.vue'
 
 const routes = [
   { path: '/', name: 'Landing', component: Landing },
@@ -12,6 +14,8 @@ const routes = [
   { path: '/about', name: 'About', component: About },
   { path: '/faq', component: FAQ }, 
   { path: '/contact', component: Contact },
+  { path: '/cart', component: Cart },
+  { path: '/checkout', component: Checkout }
 ]
 
 const router = createRouter({
