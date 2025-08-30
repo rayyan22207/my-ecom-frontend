@@ -120,7 +120,7 @@ NavLink.props = {
         <!-- Right: Search + actions -->
         <div class="col-span-6 md:col-span-3 flex items-center justify-end gap-3">
           <!-- Search (desktop) -->
-          <div class="hidden lg:flex items-center">
+          <!-- <div class="hidden lg:flex items-center">
             <div class="relative">
               <input
                 type="text"
@@ -141,19 +141,9 @@ NavLink.props = {
                 <circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>
               </svg>
             </div>
-          </div>
+          </div> -->
 
-          <!-- Sign in -->
-          <RouterLink
-            to="/signin"
-            class="hidden md:inline-flex items-center justify-center rounded-md px-3 py-2 text-sm transition"
-            :style="{
-              color: COLORS.textDim,
-              border: '1px solid rgba(191,163,110,0.25)'
-            }"
-          >
-            Sign in
-          </RouterLink>
+          
 
           <!-- Cart -->
           <RouterLink
