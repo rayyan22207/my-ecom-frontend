@@ -1,6 +1,5 @@
 <script setup>
 import ShoeHero from '../components/ShoeHero.vue'
-import TaglineBlock from '../components/TaglineBlock.vue'
 import SectionHeader from '../components/SectionHeader.vue'
 import ShoeCard from '../components/ShoeCard.vue'
 
@@ -18,7 +17,6 @@ const arrivals = [
   <div class="space-y-10">
     <ShoeHero :image="heroImg" year="2024" cta-text="Shop Now" cta-to="/shop" />
 
-    <!-- <TaglineBlock />
 
     <section class="max-w-7xl mx-auto px-6 space-y-5">
       <SectionHeader title="New Arrivals" link-text="Discover All" link-to="/shop" />
@@ -27,7 +25,7 @@ const arrivals = [
       </div>
     </section>
 
-    <section></section> -->
+    <section></section> 
 
     <!-- Wear Quality / Step in Style blocks can be added later as separate components -->
   </div>

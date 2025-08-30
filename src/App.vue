@@ -5,7 +5,7 @@ import Navbar from './components/Navbar.vue'
 <template>
   <div class="min-h-screen bg-bat-black text-bat-lightgrey flex flex-col">
     <!-- Navbar (always visible) -->
-    <!-- <Navbar /> -->
+    <Navbar />
     
 
     <!-- Page content (changes via RouterView) -->

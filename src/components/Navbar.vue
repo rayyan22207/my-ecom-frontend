@@ -1,30 +1,38 @@
 <script setup>
 import { ref, h, computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-// import { useCart } from '@/stores/cart' // if you don't have it yet, comment this line + the uses below
 
+// cart store (safe fallback)
 const cart = (() => { try { return useCart() } catch { return { count: 0 } } })()
 
 const open = ref(false)
 const toggle = () => (open.value = !open.value)
-const close = () => (open.value = false)
+const close  = () => (open.value = false)
 
 const route = useRoute()
 const cartCount = computed(() => (typeof cart.count === 'number' ? cart.count : 0))
 
-/** Reusable NavLink with animated underline + active color */
+// Luxe palette (matches hero)
+const COLORS = {
+  bg:        '#0b0b0b',
+  panel:     '#0f0f0f',
+  gold:      '#d6bf8e',
+  goldSoft:  '#bfa36e',
+  text:      '#e7e2d6',
+  textDim:   '#b8b3a6'
+}
+
+/** Reusable NavLink: subtle gold underline, active=gold text */
 const NavLink = (props, { emit }) => {
-  const isActive = route.path === props.to
+  const isActive =
+    props.exact ? route.path === props.to : route.path.startsWith(props.to)
+
   const base =
-    'group relative inline-flex items-center ' +
-    (props.block ? 'w-full py-2 px-2 rounded-lg hover:bg-bat-grey/40 ' : '')
+    'group relative inline-flex items-center font-medium tracking-wide ' +
+    (props.block ? 'w-full py-2 px-2 rounded-md hover:bg-white/5 ' : '')
 
-  const textColor = isActive
-    ? (props.pink ? 'text-bat-pink' : 'text-bat-red')
-    : 'text-bat-lightgrey'
-
-  const hoverColor = props.pink ? 'group-hover:text-bat-pink' : 'group-hover:text-bat-red'
-  const underlineColor = props.pink ? 'bg-bat-pink' : 'bg-bat-red'
+  const textColor = isActive ? 'text-[var(--gold)]' : 'text-[var(--textDim)]'
+  const hoverColor = 'group-hover:text-[var(--gold)]'
 
   return h(
     RouterLink,
@@ -32,6 +40,10 @@ const NavLink = (props, { emit }) => {
       to: props.to,
       class: `${base} ${textColor} ${hoverColor} transition-colors duration-150`,
       onClick: () => emit?.('click'),
+      style: {
+        '--gold': COLORS.gold,
+        '--textDim': COLORS.textDim
+      }
     },
     {
       default: () => [
@@ -39,56 +51,93 @@ const NavLink = (props, { emit }) => {
           props.label,
           h('span', {
             class:
-              `pointer-events-none absolute -bottom-1 left-0 h-0.5 ${underlineColor} w-full origin-left ` +
-              `${isActive ? 'scale-x-100' : 'scale-x-0'} group-hover:scale-x-100 transition-transform duration-200`,
-          }),
-        ]),
-      ],
+              'pointer-events-none absolute -bottom-[6px] left-0 h-[1px] w-full ' +
+              'origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-200',
+            style: {
+              background:
+                isActive
+                  ? `linear-gradient(90deg, ${COLORS.gold}, ${COLORS.goldSoft})`
+                  : `linear-gradient(90deg, transparent, ${COLORS.goldSoft})`,
+              transform: isActive ? 'scaleX(1)' : undefined
+            }
+          })
+        ])
+      ]
     }
   )
 }
 NavLink.props = {
   to: { type: String, required: true },
   label: { type: String, required: true },
-  pink: { type: Boolean, default: false },
   block: { type: Boolean, default: false },
+  exact: { type: Boolean, default: false }
 }
 </script>
 
 <template>
   <nav
-    class="sticky top-0 z-50 bg-bat-dark/90 backdrop-blur border-b border-bat-grey/70 text-bat-lightgrey shadow-[0_6px_20px_rgba(0,0,0,0.35)]"
+    class="sticky top-0 z-50 border-b backdrop-blur"
+    :style="{
+      background: 'rgba(11,11,11,0.86)',
+      borderColor: 'rgba(191,163,110,0.28)',  /* goldSoft */
+      boxShadow: '0 8px 22px rgba(0,0,0,.35)'
+    }"
   >
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="grid grid-cols-12 items-center h-16 gap-3">
-        <!-- Left: Logo -->
+    <!-- thin top hairline for couture look -->
+    <div class="h-[1px] w-full" :style="{ background: 'rgba(191,163,110,0.18)' }"></div>
+
+    <div class="mx-auto max-w-7xl px-4">
+      <div class="grid h-16 grid-cols-12 items-center gap-3">
+        <!-- Left: Logo (serif + gold dot) -->
         <div class="col-span-6 md:col-span-3 flex items-center">
-          <RouterLink to="/" class="flex items-center gap-2" @click="close">
-            <span class="h-9 w-9 rounded-full bg-bat-pink shadow-[0_0_14px_rgba(255,46,136,.6)]"></span>
-            <span class="hidden sm:inline text-lg font-bold text-bat-pink">Gotham</span>
+          <RouterLink to="/" class="flex items-center gap-3" @click="close">
+            <span class="relative inline-flex items-center justify-center">
+              <span class="h-2.5 w-2.5 rounded-full"
+                    :style="{ background: COLORS.gold }"></span>
+            </span>
+            <span
+              class="hidden sm:inline text-lg font-semibold"
+              :style="{
+                color: COLORS.text,
+                fontFamily: 'ui-serif, Georgia, Cambria, Times New Roman, Times, serif',
+                letterSpacing: '0.5px'
+              }"
+            >
+              ECOM SHOE STORE
+            </span>
           </RouterLink>
         </div>
 
         <!-- Center: Desktop nav -->
-        <div class="hidden md:flex col-span-6 items-center justify-center gap-8">
-          <NavLink to="/" label="Home" />
-          <NavLink to="/shop" label="Shop" pink />
-          <NavLink to="/cart" label="Cart" />
+        <div class="col-span-6 hidden items-center justify-center gap-8 md:flex">
+          <NavLink to="/" label="Home" exact />
+          <NavLink to="/shop" label="Shop" />
+          <NavLink to="/about" label="About" />
+          <NavLink to="/faq" label="FAQ" />
+          <NavLink to="/contact" label="Contact" />
         </div>
 
-        <!-- Right: Search + CTAs (desktop) / Burger (mobile) -->
+        <!-- Right: Search + actions -->
         <div class="col-span-6 md:col-span-3 flex items-center justify-end gap-3">
           <!-- Search (desktop) -->
-          <div class="hidden lg:flex items-center gap-2">
+          <div class="hidden lg:flex items-center">
             <div class="relative">
               <input
                 type="text"
                 placeholder="Search"
-                class="w-44 xl:w-56 rounded-lg border border-bat-grey bg-bat-black/70 placeholder-bat-lightgrey/50
-                       px-3 py-2 outline-none focus:ring-2 focus:ring-bat-pink focus:border-bat-pink transition"
+                class="w-44 xl:w-56 rounded-md border bg-transparent px-3 py-2 outline-none
+                       transition focus:ring-2"
+                :style="{
+                  borderColor: 'rgba(191,163,110,0.25)',
+                  color: COLORS.text,
+                  caretColor: COLORS.gold,
+                  boxShadow: 'inset 0 0 0 9999px rgba(255,255,255,0.02)'
+                }"
               />
-              <svg class="absolute right-2 top-2.5 h-4 w-4 text-bat-lightgrey/70" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="pointer-events-none absolute right-2 top-2.5 h-4 w-4"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                   stroke-linecap="round" stroke-linejoin="round"
+                   :style="{ color: 'rgba(232,226,214,0.65)' }">
                 <circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>
               </svg>
             </div>
@@ -97,29 +146,34 @@ NavLink.props = {
           <!-- Sign in -->
           <RouterLink
             to="/signin"
-            class="hidden md:inline-flex items-center justify-center rounded-lg border border-bat-grey px-3 py-2
-                   hover:bg-bat-grey/40 transition text-sm"
+            class="hidden md:inline-flex items-center justify-center rounded-md px-3 py-2 text-sm transition"
+            :style="{
+              color: COLORS.textDim,
+              border: '1px solid rgba(191,163,110,0.25)'
+            }"
           >
             Sign in
           </RouterLink>
 
-          <!-- Cart button with badge -->
+          <!-- Cart -->
           <RouterLink
             to="/cart"
-            class="relative inline-flex items-center justify-center rounded-lg border border-bat-grey p-2
-                   hover:bg-bat-grey/40 transition"
+            class="relative inline-flex items-center justify-center rounded-md p-2 transition"
+            :style="{ border: '1px solid rgba(191,163,110,0.25)' }"
             aria-label="Cart"
           >
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                 stroke="currentColor" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round"
+                 :style="{ color: COLORS.text }">
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L21 6H6"></path>
             </svg>
             <span
               v-if="cartCount > 0"
-              class="absolute -top-1 -right-1 rounded-full bg-bat-red text-white text-[10px] font-semibold px-1.5 py-0.5
-                     shadow-[0_0_10px_rgba(255,23,68,.6)]"
+              class="absolute -right-1 -top-1 rounded-full px-1.5 py-0.5 text-[10px] font-semibold text-black"
+              :style="{ background: COLORS.gold, boxShadow: '0 0 10px rgba(214,191,142,.55)' }"
             >
               {{ cartCount }}
             </span>
@@ -127,7 +181,8 @@ NavLink.props = {
 
           <!-- Burger -->
           <button
-            class="md:hidden inline-flex items-center justify-center rounded-lg p-2 hover:bg-bat-grey/50 transition"
+            class="md:hidden inline-flex items-center justify-center rounded-md p-2 transition"
+            :style="{ color: COLORS.text, background: 'transparent' }"
             :aria-expanded="open.toString()" aria-controls="mobile-menu" @click="toggle"
           >
             <svg v-if="!open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -145,7 +200,7 @@ NavLink.props = {
       </div>
     </div>
 
-    <!-- Mobile menu -->
+    <!-- Mobile drawer -->
     <transition
       enter-active-class="duration-200 ease-out"
       enter-from-class="opacity-0 -translate-y-2"
@@ -154,32 +209,46 @@ NavLink.props = {
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 -translate-y-2"
     >
-      <div v-show="open" id="mobile-menu" class="md:hidden border-t border-bat-grey/60">
-        <div class="px-4 py-3 space-y-3">
+      <div
+        v-show="open"
+        id="mobile-menu"
+        class="md:hidden border-t"
+        :style="{ borderColor: 'rgba(191,163,110,0.28)' }"
+      >
+        <div class="space-y-3 px-4 py-3">
           <div class="relative">
             <input
               type="text"
               placeholder="Search"
-              class="w-full rounded-lg border border-bat-grey bg-bat-black/70 placeholder-bat-lightgrey/50
-                     px-3 py-2 outline-none focus:ring-2 focus:ring-bat-pink focus:border-bat-pink transition"
+              class="w-full rounded-md border bg-transparent px-3 py-2 outline-none transition"
+              :style="{
+                borderColor: 'rgba(191,163,110,0.25)',
+                color: COLORS.text,
+                caretColor: COLORS.gold,
+                boxShadow: 'inset 0 0 0 9999px rgba(255,255,255,0.02)'
+              }"
             />
-            <svg class="absolute right-2 top-2.5 h-4 w-4 text-bat-lightgrey/70" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="pointer-events-none absolute right-2 top-2.5 h-4 w-4"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round"
+                 :style="{ color: 'rgba(232,226,214,0.65)' }">
               <circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>
             </svg>
           </div>
 
-          <div class="pt-1 space-y-1">
-            <NavLink to="/" label="Home" block @click.native="close" />
-            <NavLink to="/shop" label="Shop" pink block @click.native="close" />
-            <NavLink to="/cart" label="Cart" block @click.native="close" />
+          <div class="space-y-1 pt-1">
+            <NavLink to="/" label="Home" block exact @click.native="close" />
+            <NavLink to="/shop" label="Shop" block @click.native="close" />
+            <NavLink to="/about" label="About" block @click.native="close" />
+            <NavLink to="/faq" label="FAQ" block @click.native="close" />
+            <NavLink to="/contact" label="Contact" block @click.native="close" />
           </div>
 
-          <div class="pt-2 flex items-center gap-2">
+          <div class="flex items-center gap-2 pt-2">
             <RouterLink
               to="/signin"
-              class="inline-flex flex-1 items-center justify-center rounded-lg border border-bat-grey px-3 py-2
-                     hover:bg-bat-grey/40 transition text-sm"
+              class="inline-flex flex-1 items-center justify-center rounded-md px-3 py-2 text-sm transition"
+              :style="{ color: COLORS.textDim, border: '1px solid rgba(191,163,110,0.25)' }"
               @click="close"
             >
               Sign in
@@ -187,20 +256,21 @@ NavLink.props = {
 
             <RouterLink
               to="/cart"
-              class="relative inline-flex items-center justify-center rounded-lg border border-bat-grey p-2
-                     hover:bg-bat-grey/40 transition"
+              class="relative inline-flex items-center justify-center rounded-md p-2 transition"
+              :style="{ border: '1px solid rgba(191,163,110,0.25)' }"
               @click="close"
             >
               <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                   stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+                   :style="{ color: COLORS.text }">
                 <circle cx="9" cy="21" r="1"></circle>
                 <circle cx="20" cy="21" r="1"></circle>
                 <path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L21 6H6"></path>
               </svg>
               <span
                 v-if="cartCount > 0"
-                class="absolute -top-1 -right-1 rounded-full bg-bat-red text-white text-[10px] font-semibold px-1.5 py-0.5
-                       shadow-[0_0_10px_rgba(255,23,68,.6)]"
+                class="absolute -right-1 -top-1 rounded-full px-1.5 py-0.5 text-[10px] font-semibold text-black"
+                :style="{ background: COLORS.gold, boxShadow: '0 0 10px rgba(214,191,142,.55)' }"
               >
                 {{ cartCount }}
               </span>
@@ -209,9 +279,13 @@ NavLink.props = {
         </div>
       </div>
     </transition>
+
+    <!-- thin bottom hairline -->
+    <div class="h-[1px] w-full" :style="{ background: 'rgba(191,163,110,0.18)' }"></div>
   </nav>
 </template>
 
 <style scoped>
+/* ensure underline animates from the left cleanly */
 .group span > span { transform-origin: left; }
 </style>
